@@ -1,18 +1,19 @@
 use serenity::framework::standard::macros::command;
-use serenity::framework::standard::CommandResult;
+use serenity::framework::standard::{Args, CommandResult};
 use serenity::model::prelude::*;
 use serenity::prelude::*;
 use std::time::Duration;
 use std::vec;
 
 #[command]
-pub async fn tictac(ctx: &Context, msg: &Message) -> CommandResult {
+pub async fn tictac(ctx: &Context, msg: &Message, mut args: Args) -> CommandResult {
     let mut positions = vec![vec![0, 0, 0], vec![0, 0, 0], vec![0, 0, 0]]; //the board is actually a 3x3 matrix (or an vector made of 3 more vectors) :')
     let mut x_turn = true; //true = X, false = O
     let mut choose_r: i32 = 0;
     let mut choose_c: i32 = 0;
     let mut passone = true;
     let mut passtwou = true;
+    let player_twou = args.single::<String>().unwrap();
     msg.channel_id
         .say(&ctx.http, positionstostring(&positions))
         .await?;
@@ -37,7 +38,6 @@ pub async fn tictac(ctx: &Context, msg: &Message) -> CommandResult {
                     } else if answer.content[..1].parse::<i32>().unwrap() <= 3
                         && answer.content[..1].parse::<i32>().unwrap() >= 1
                     {
-
                         choose_r = answer.content[..1].parse::<i32>().unwrap() as i32 - 1;
                     } else {
                         let _ = answer
